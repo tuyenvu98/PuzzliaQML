@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Cell.qml</file>
+        <file>Shapes.qml</file>
+        <file>Setting.qml</file>
+        <file>CustomMap.qml</file>
+        <file>Log.qml</file>
+        <file>Win.qml</file>
+        <file>Help.qml</file>
+    </qresource>
+    <qresource prefix="/text">
+        <file>maps/01.txt</file>
+        <file>maps/08.txt</file>
+        <file>maps/09.txt</file>
+        <file>maps/32.txt</file>
+        <file>maps/33.txt</file>
+        <file>maps/51.txt</file>
+        <file>maps/52.txt</file>
+        <file>maps/55.txt</file>
+        <file>maps/56.txt</file>
+        <file>maps/63.txt</file>
+        <file>maps/64.txt</file>
+        <file>maps/71.txt</file>
+        <file>maps/75.txt</file>
+        <file>maps/76.txt</file>
+        <file>maps/89.txt</file>
+        <file>maps/90.txt</file>
+        <file>Guidelines.pdf</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file>gifs/firework.gif</file>
+        <file>icons/windowIcon.ico</file>
+    </qresource>
+</RCC>
