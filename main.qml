@@ -308,10 +308,6 @@ Window {
             anchors.bottomMargin: 10
             anchors.rightMargin: 15
         }
-        VideoOutput {
-            id: videoOutput
-            anchors.fill: parent
-        }
         Rectangle {
             width: 640
             height: 480
