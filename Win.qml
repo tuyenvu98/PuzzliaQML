@@ -21,5 +21,21 @@ Window {
             height: 100
             anchors.centerIn: parent
         }
+
+        Button {
+            id: btnOK
+            text: "\u{2714}"
+            width: buttonSize*1.4
+            height: buttonSize
+            font.pixelSize: 30
+            font.bold: true
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 10
+            anchors.bottomMargin: 10
+            onClicked: {
+                close()
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-QT += quick concurrent multimedia
+QT += quick concurrent
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -17,6 +17,9 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
+CONFIG(wasm_build) {
+    QMAKE_CXXFLAGS += -os  # Optimize for size for WebAssembly
+}
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs
 Window {
+    id: settingWindow
     visible: true
     width: 350
     height: 450
@@ -82,10 +83,11 @@ Window {
 
         Button {
             id: btnOK
-            text: "\u{2705}"
+            text: "\u{2714}"
             width: buttonSize*1.4
             height: buttonSize
-            font.pixelSize: 20
+            font.pixelSize: 30
+            font.bold: true
             anchors.rightMargin: 10
             anchors.right: btnCancel.left
             anchors.bottom: btnCancel.bottom
@@ -101,22 +103,22 @@ Window {
                 if(s<1)
                     s=40
                 cellSize= parseInt(txtSize.text)
-                close()
+                settingWindow.destroy()
             }
         }
 
         Button {
             id: btnCancel
-            text: "\u{274C}"
+            text: "\u{2716}"
             width: buttonSize*1.4
             height: buttonSize
-            font.pixelSize: 20
+            font.pixelSize: 30
             anchors.rightMargin: 20
             anchors.bottomMargin: 20
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             onClicked: {
-                close()
+               settingWindow.destroy()
             }
         }
 

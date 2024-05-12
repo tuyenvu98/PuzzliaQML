@@ -8,21 +8,21 @@ Rectangle {
     height: cellSize
     radius: cellSize/4
     border.color: labelText === "-1" ? "transparent":"black"
-    property var textVisible: labelText === "-1" ? false:true
     Text {
         id: textLabel
         anchors.centerIn: parent
         color: "black"
         font.bold: true
-        visible: textVisible
+        visible: false
     }
     MouseArea {
         anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        //acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             var oldX = shape.children[0].x
             var oldY = shape.children[0].y
-            var dim = (mouse.button === Qt.RightButton) ? 1:-1
+            //var dim = (mouse.button === Qt.RightButton) ? 1:-1
+            var dim=1
             var angle = 90*dim
             for(var i =0; i<shape.children.length;i++)
             {

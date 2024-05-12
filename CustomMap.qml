@@ -66,10 +66,11 @@ Window {
         }
         Button {
             id: btnAddFirstRow
-            text: "\u{2795}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.left: gridEdit.left
             anchors.bottom: gridEdit.top
             anchors.bottomMargin: 10
@@ -82,10 +83,11 @@ Window {
         }
         Button {
             id: btnDeleteFirstRow
-            text: "\u{2796}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.right: gridEdit.right
             anchors.bottom: btnAddFirstRow.bottom
             onClicked: {
@@ -102,10 +104,11 @@ Window {
         }
         Button {
             id: btnAddLastRow
-            text: "\u{2795}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.left: gridEdit.left
             anchors.top: gridEdit.bottom
             anchors.topMargin: 10
@@ -118,10 +121,11 @@ Window {
         }
         Button {
             id: btnDeleteLastRow
-            text: "\u{2796}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.right: gridEdit.right
             anchors.bottom: btnAddLastRow.bottom
             onClicked: {
@@ -139,10 +143,11 @@ Window {
 
         Button {
             id: btnAddFirstCol
-            text: "\u{2795}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.right: gridEdit.left
             anchors.top: gridEdit.top
             anchors.rightMargin: 10
@@ -157,10 +162,11 @@ Window {
         }
         Button {
             id: btnDeleteFirstCol
-            text: "\u{2796}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.left: btnAddFirstCol.left
             anchors.bottom: gridEdit.bottom
             onClicked: {
@@ -176,10 +182,11 @@ Window {
         }
         Button {
             id: btnAddLastCol
-            text: "\u{2795}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.left: gridEdit.right
             anchors.top: gridEdit.top
             anchors.leftMargin: 10
@@ -194,10 +201,11 @@ Window {
         }
         Button {
             id: btnDeleteLastCol
-            text: "\u{2796}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
+            font.bold: true
             anchors.left: btnAddLastCol.left
             anchors.bottom: gridEdit.bottom
             onClicked: {
@@ -215,10 +223,11 @@ Window {
     }
     Button {
         id: btnRevert
-        text: "\u{21A9}"
-        width: buttonSize*1.4
+        text: (platform === "PC") ?"Revert":"\u{21A9}"
+        width: buttonSize*2
         height: buttonSize
         font.pixelSize: 20
+        font.bold: true
         anchors.leftMargin: 20
         anchors.bottomMargin: 20
         anchors.left: parent.left
@@ -242,10 +251,11 @@ Window {
 
     Button {
         id: btnOK
-        text: "\u{2705}"
+        text: "\u{2714}"
         width: buttonSize*1.4
         height: buttonSize
-        font.pixelSize: 20
+        font.pixelSize: 30
+        font.bold: true
         anchors.rightMargin: 10
         anchors.right: btnCancel.left
         anchors.bottom: btnCancel.bottom
@@ -261,10 +271,10 @@ Window {
     }
     Button {
         id: btnCancel
-        text: "\u{274C}"
+        text: "\u{2716}"
         width: buttonSize*1.4
         height: buttonSize
-        font.pixelSize: 20
+        font.pixelSize: 30
         anchors.rightMargin: 20
         anchors.bottomMargin: 20
         anchors.right: parent.right

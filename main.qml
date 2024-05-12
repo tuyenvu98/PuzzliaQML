@@ -2,12 +2,11 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs
-import QtMultimedia
 Window {
     id:mainwindow
     visible: true
-    width: 400
-    height: 650
+    width: Screen.width
+    height: Screen.height
     title: qsTr("Puzzlia")
     property var colors: {
         let colors = new Map()
@@ -30,7 +29,7 @@ Window {
     property var usedShapeItems: []
     property bool triangleMode: false
     property bool autoSolveMode: true
-    property int cellSize: platform==="Android" ? mapArea.width/12 :mapArea.width/12
+    property int cellSize: Screen.height > Screen.width  ? mapArea.width/12 :Screen.height/12
     property int buttonSize: 50
     property string status: Qt.formatTime(new Date(), "hh:mm:ss")+": Ready... \n"
     Connections {
@@ -129,7 +128,7 @@ Window {
                     }
                 }
                 MenuItem {
-                    text: "\u{1F4CB} Log"
+                    text: "\u{270F} Log"
                     onTriggered: {
                         var component = Qt.createComponent("Log.qml");
                         if (component.status === Component.Ready) {
@@ -162,13 +161,14 @@ Window {
         }
         Button {
             id: btnHelp
-            width: 35
-            height:35
+            width: 40
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 1
             anchors.right: parent.right
-            text: "\u{2753}"
-            font.pixelSize: 20
+            text: "\u{2139}"
+            font.pixelSize: 30
+            font.bold: true
             z: z++
             MouseArea {
                 anchors.fill: parent
@@ -185,10 +185,11 @@ Window {
 
         Button {
             id:btnReset
-            text: "\u{1F501}"
-            width: buttonSize*1.4
+            text: (platform === "PC") ? "Reset":"\u{1F501}"
+            width: buttonSize*2
             height: buttonSize
-            font.pixelSize: 18
+            font.pixelSize: 20
+            font.bold: true
             enabled: btnSolve.enabled
             z: z++
             Text {
@@ -230,10 +231,11 @@ Window {
 
         Button {
             id:btnLoad
-            text: "\u{1F4E4}"
-            width: buttonSize *1.4
+            text: (platform === "PC") ? "Load":"\u{1F4E4}"
+            width: buttonSize *2
             height: buttonSize
             font.pixelSize: 20
+            font.bold: true
             enabled: btnSolve.enabled
             z: z++
             onClicked: {
@@ -249,17 +251,16 @@ Window {
 
         Button {
             id:btnLoadImage
-            text: "\u{1F4F7}"
-            width: buttonSize *1.4
+            text: (platform === "PC") ? "Image":"\u{1F4F7}"
+            width: buttonSize *2
             height: buttonSize
             font.bold: true
             font.pixelSize: 20
             enabled: btnSolve.enabled
             z: z++
             onClicked: {
-                camera.start();
-                //resetMap()
-                //imageFileDialog.open()
+                resetMap()
+                imageFileDialog.open()
             }
             anchors.left: btnLoad.left
             anchors.bottom: btnLoad.top
@@ -280,10 +281,11 @@ Window {
 
         Button {
             id: btnNext
-            text: "\u{23E9}"
-            width: buttonSize*1.4
+            text: (platform === "PC") ?"Next":"\u{23E9}"
+            width: buttonSize*2
             height: buttonSize
             font.pixelSize: 20
+            font.bold: true
             visible: autoSolveMode
             z: z++
             Text {
@@ -308,22 +310,14 @@ Window {
             anchors.bottomMargin: 10
             anchors.rightMargin: 15
         }
-        Rectangle {
-            width: 640
-            height: 480
-
-            Camera {
-                id: camera
-            }
-
-        }
         Button {
             id: btnCancel
-            text: "\u{274C}"
-            width: buttonSize*1.4
+            text: (platform === "PC") ? "Cancel":"\u{274C}"
+            width: buttonSize*2
             height: buttonSize
             visible: !btnSolve.enabled
             font.pixelSize: 20
+            font.bold: true
             z: z++
             onClicked: {
                 board.cancel()
@@ -335,11 +329,12 @@ Window {
         }
         Button {
             id: btnSolve
-            text: "\u{1F50D}"
-            width: buttonSize*1.4
+            text: (platform === "PC") ? "Solve":"\u{1F50D}"
+            width: buttonSize*2
             height: buttonSize
             visible: autoSolveMode
             font.pixelSize: 20
+            font.bold: true
             z: z++
             onClicked: {
                 board.solve()
@@ -351,11 +346,12 @@ Window {
             anchors.bottomMargin: 15
         }
         Button {
-            text: "\u{23EA}"
+            text: (platform === "PC") ? "Review":"\u{23EA}"
             id: btnReview
-            width: buttonSize*1.4
+            width: buttonSize*2
             height: buttonSize
             font.pixelSize: 20
+            font.bold: true
             visible: autoSolveMode
             z: z++
             Text {
@@ -392,10 +388,10 @@ Window {
             anchors.right: parent.right
             anchors.rightMargin: 5
             color:"transparent"
-            Flickable {
+            /*Flickable {
                 anchors.fill: parent
                 contentWidth: grid.width+50
-                contentHeight: grid.height+50
+                contentHeight: grid.height+50*/
                 Grid {
                     id:grid
                     anchors.centerIn: parent
@@ -409,7 +405,7 @@ Window {
                         }
                     }
                 }
-            }
+            //}
         }
 
         Rectangle{
@@ -467,11 +463,11 @@ Window {
 
             Button {
                 id:btnEdit
-                text: "\u{1F528}"
-                width: buttonSize*1.4
+                text: "\u{2702}"
+                width: 40
                 height: 40
                 font.bold: true
-                font.pixelSize: 16
+                font.pixelSize: 30
                 enabled: btnSolve.enabled
                 z: z++
                 Text {

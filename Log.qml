@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs
 Window {
+    id: logWindow
     visible: true
     width: 300
     height: 600
@@ -19,8 +20,8 @@ Window {
     }
     Button {
         id: btnClear
-        text: "\u{1F5D1}"
-        width: buttonSize*1.4
+        text: (platform === "PC") ?"Clear":"\u{1F5D1}"
+        width: buttonSize*2
         height: buttonSize
         font.bold: true
         font.pixelSize: 20
@@ -64,16 +65,17 @@ Window {
     }
     Button {
         id: btnOK
-        text: "\u{2705}"
+        text: "\u{2714}"
         width: buttonSize*1.4
         height: buttonSize
-        font.pixelSize: 20
+        font.pixelSize: 30
+        font.bold: true
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.rightMargin: 10
         anchors.bottomMargin: 10
         onClicked: {
-            close()
+            logWindow.destroy()
         }
     }
 }
