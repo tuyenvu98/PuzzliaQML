@@ -10,11 +10,11 @@ Window {
     title: qsTr("Puzzlia")
     property var colors: {
         let colors = new Map()
-        colors.set(3, "darkviolet").set(4, "steelblue").set(5, "yellow").set(6, "blue")
-                .set(7, "lawngreen").set(8, "red").set(9, "darkorange").set(10, "darksalmon")
-                .set(13, "saddlebrown").set(14, "indigo").set(15, "darkgreen").set(16, "cyan")
+        colors.set(3, "darkviolet").set(4, "azure").set(5, "yellow").set(6, "blue")
+                .set(7, "lawngreen").set(8, "red").set(9, "darkorange").set(10, "peru")
+                .set(13, "saddlebrown").set(14, "lightgray").set(15, "darkgreen").set(16, "cyan")
                 .set(1, "grey").set(2, "green").set(11, "saddlebrown").set(12, "cornflowerblue")
-                .set(0, "white").set(-1, "transparent")
+                .set(0, "blanchedalmond").set(-1, "transparent")
         return colors
     }
     property var shapes: {
@@ -29,25 +29,9 @@ Window {
     property var usedShapeItems: []
     property bool triangleMode: false
     property bool autoSolveMode: true
-    property int cellSize: mapArea.height/7 < mainwindow.width/11 ? mapArea.height/7 : mainwindow.width/11
-    property int buttonSize: 40
+    property int cellSize: Screen.height > Screen.width  ? mapArea.width/12 :Screen.height/12
+    property int buttonSize: 50
     property string status: Qt.formatTime(new Date(), "hh:mm:ss")+": Ready... \n"
-    onTriangleModeChanged:
-    {
-        if(triangleMode)
-            if(mapArea.height/11<cellSize)
-                cellSize=mapArea.height/11
-    }
-    FontLoader
-    {
-        id:lemonadaFont
-        source: "/fonts/Lemonada.ttf"
-    }
-    FontLoader
-    {
-        id:jaroFont
-        source: "/fonts/Jaro-Regular.ttf"
-    }
     Connections {
         target: board
         onMapChanged: {
@@ -64,7 +48,7 @@ Window {
             var m=0
             while(m<items.count)
             {
-                var index = cbShapeName.model.indexOf(items.itemAt(m).shapeName)
+                var index = cbShapeName.model.indexOf(parseInt(items.itemAt(m).children[0].labelText))
                 if(index>-1)
                     cbShapeName.model.splice(index, 1)
                 else
@@ -108,32 +92,24 @@ Window {
                 }
             }
         }
-
         MenuBar {
             id:menuBar
             height:35
-            font.family: jaroFont.name
             Menu {
                 title: "File"
                 MenuItem {
-                    text: "\u{2B07} Save"
-                    font.family: lemonadaFont.name
-                    font.pixelSize: 14
+                    text: "\u{1F4BE} Save"
                     onTriggered: {
                         board.saveMap()
                     }
                 }
                 MenuItem {
-                    text: "\u{2712} Save As"
-                    font.family: lemonadaFont.name
-                    font.pixelSize: 14
+                    text: "\u{1F4BD} Save As"
                     onTriggered: {
                     }
                 }
                 MenuItem {
-                    text: "\u{2B06} Import"
-                    font.family: lemonadaFont.name
-                    font.pixelSize: 14
+                    text: "\u{1F4C2} Import"
                     onTriggered: {
                         txtFileDialog.open()
                     }
@@ -143,8 +119,6 @@ Window {
                 title: "Options"
                 MenuItem {
                     text: "\u{2699} Setting"
-                    font.family: lemonadaFont.name
-                    font.pixelSize: 14
                     onTriggered: {
                         var component = Qt.createComponent("Setting.qml");
                         if (component.status === Component.Ready) {
@@ -155,8 +129,6 @@ Window {
                 }
                 MenuItem {
                     text: "\u{270F} Log"
-                    font.family: lemonadaFont.name
-                    font.pixelSize: 14
                     onTriggered: {
                         var component = Qt.createComponent("Log.qml");
                         if (component.status === Component.Ready) {
@@ -169,14 +141,13 @@ Window {
         }
         Text {
             id: txtBlink
-            color: "darkred"
+            font.bold:true
             font.italic: true
             anchors.top: parent.top
             anchors.right: btnHelp.left
             anchors.rightMargin: 20
             text: ""
-            font.pixelSize: buttonSize/2
-            font.family: jaroFont.name
+            font.pixelSize: 16
 
             PropertyAnimation {
                 id: blinkAnimation
@@ -190,23 +161,15 @@ Window {
         }
         Button {
             id: btnHelp
-            width: buttonSize
-            height:buttonSize*0.8
+            width: 40
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 1
             anchors.right: parent.right
             text: "\u{2139}"
-            font.pixelSize: buttonSize*0.8
-            font.family: jaroFont.name
+            font.pixelSize: 30
+            font.bold: true
             z: z++
-            background: Rectangle {
-                radius: 15
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#3366cc" }
-                    GradientStop { position: 1.0; color: "#3B82F6" }
-                }
-            }
-            hoverEnabled: false
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
@@ -225,25 +188,27 @@ Window {
             text: (platform === "PC") ? "Reset":"\u{1F501}"
             width: buttonSize*2
             height: buttonSize
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             enabled: btnSolve.enabled
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#E53935" }
-                    GradientStop { position: 1.0; color: "#EF5350" }
-                }
+            Text {
+                id :txtReset
+                x: parent.x +20
+                text: "Reset"
+                color:  "blue"
+                visible: false
             }
-            hoverEnabled: false
             MouseArea
             {
                 anchors.fill: parent
+                hoverEnabled: true
                 onClicked: {
                     resetMap()
                     board.resetMap()
                 }
+                onEntered: txtReset.visible=true
+                onExited: txtReset.visible=false
             }
 
             anchors.left: btnLoad.left
@@ -269,18 +234,10 @@ Window {
             text: (platform === "PC") ? "Load":"\u{1F4E4}"
             width: buttonSize *2
             height: buttonSize
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             enabled: btnSolve.enabled
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#4CAF50" }
-                    GradientStop { position: 1.0; color: "#8BC34A" }
-                }
-            }
-            hoverEnabled: false
             onClicked: {
                 resetMap()
                 let mapName = cbMapList.currentText+".txt"
@@ -297,18 +254,10 @@ Window {
             text: (platform === "PC") ? "Image":"\u{1F4F7}"
             width: buttonSize *2
             height: buttonSize
-            font.family: jaroFont.name
-            font.pixelSize: buttonSize*0.4
+            font.bold: true
+            font.pixelSize: 20
             enabled: btnSolve.enabled
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#4CAF50" }
-                    GradientStop { position: 1.0; color: "#8BC34A" }
-                }
-            }
-            hoverEnabled: false
             onClicked: {
                 resetMap()
                 imageFileDialog.open()
@@ -322,27 +271,11 @@ Window {
             anchors.top: btnLoad.top
             anchors.topMargin: 1
             anchors.left: btnLoad.right
-            width: buttonSize*2
-            height: buttonSize
-            font.pixelSize: buttonSize*0.3
-            font.family: lemonadaFont.name
+            width: 100
+            height: 50
+            font.pixelSize: 12
             popup.height: model.length >5 ? 150 : model.length*30
-            popup.font.family: font.family
-            popup.font.pixelSize: font.pixelSize
-            popup.background: Rectangle {
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffcc99" }
-                }
-            }
             model: board.getMapList()
-            background: Rectangle {
-                radius: 15
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffcc99" }
-                }
-            }
         }
 
 
@@ -351,18 +284,10 @@ Window {
             text: (platform === "PC") ?"Next":"\u{23E9}"
             width: buttonSize*2
             height: buttonSize
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             visible: autoSolveMode
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#4CAF50" }
-                    GradientStop { position: 1.0; color: "#8BC34A" }
-                }
-            }
-            hoverEnabled: false
             Text {
                 id :txtNext
                 x: parent.x +20
@@ -391,17 +316,9 @@ Window {
             width: buttonSize*2
             height: buttonSize
             visible: !btnSolve.enabled
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#E53935" }
-                    GradientStop { position: 1.0; color: "#EF5350" }
-                }
-            }
-            hoverEnabled: false
             onClicked: {
                 board.cancel()
                 setEnableButtons(true)
@@ -416,24 +333,16 @@ Window {
             width: buttonSize*2
             height: buttonSize
             visible: autoSolveMode
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#4CAF50" }
-                    GradientStop { position: 1.0; color: "#8BC34A" }
-                }
-            }
-            hoverEnabled: false
             onClicked: {
                 board.solve()
                 setEnableButtons(false)
                 status += Qt.formatTime(new Date(), "hh:mm:ss")+": Start solving \u{23F3}\n"
             }
-            anchors.right: btnReview.right
-            anchors.bottom: btnReview.top
+            anchors.right: btnNext.right
+            anchors.bottom: btnNext.top
             anchors.bottomMargin: 15
         }
         Button {
@@ -441,18 +350,10 @@ Window {
             id: btnReview
             width: buttonSize*2
             height: buttonSize
-            font.pixelSize: buttonSize*0.4
-            font.family: jaroFont.name
+            font.pixelSize: 20
+            font.bold: true
             visible: autoSolveMode
             z: z++
-            background: Rectangle {
-                radius: 25
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#4CAF50" }
-                    GradientStop { position: 1.0; color: "#8BC34A" }
-                }
-            }
-            hoverEnabled: false
             Text {
                 id :txtReview
                 x: parent.x +20
@@ -472,59 +373,45 @@ Window {
             }
 
             anchors.left: btnNext.left
-            anchors.bottom: btnNext.top
+            anchors.bottom: btnSolve.top
             anchors.bottomMargin: 15
         }
         Rectangle
         {
             id: mapArea
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: mainwindow.height < mainwindow.width ? cbMapList.top :btnReset.top
             anchors.top: createArea.bottom
+            anchors.left: parent.left
+            anchors.leftMargin: 5
+            anchors.topMargin: 20
+            anchors.bottom: btnReview.top
+            anchors.bottomMargin: 20
+            anchors.right: parent.right
+            anchors.rightMargin: 5
             color:"transparent"
-            Grid {
-                id:grid
-                anchors.centerIn: parent
-                rows: board.map.length
-                columns: board.map[0].length
-                enabled: btnSolve.enabled
-                spacing: 1
-                Repeater {
-                    model: parent.rows * parent.columns
-                    Cell {
-                        labelText: 0
-                        border.width:2
-                        MouseArea
-                        {
-                            anchors.fill: parent
-                            onDoubleClicked:
-                            {
-                                if(usedShapeItems.includes(labelText))
-                                {
-                                    for(var i=0;i<items.count;i++ )
-                                    {
-                                        var s = items.itemAt(i)
-                                        if(s.shapeName===labelText)
-                                        {
-                                            undoChanged(labelText)
-                                            s.visible = true
-                                            break
-                                        }
-                                    }
-                                }
-                            }
+            /*Flickable {
+                anchors.fill: parent
+                contentWidth: grid.width+50
+                contentHeight: grid.height+50*/
+                Grid {
+                    id:grid
+                    anchors.centerIn: parent
+                    rows: board.map.length
+                    columns: board.map[0].length
+                    enabled: btnSolve.enabled
+                    Repeater {
+                        model: parent.rows * parent.columns
+                        Cell {
+                            labelText: "0"
                         }
                     }
                 }
-            }
+            //}
         }
 
         Rectangle{
             id: createArea
             height: mainwindow.height/4
             border.color: "black"
-            border.width: 3
-            radius:20
             anchors.top: menuBar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -537,10 +424,6 @@ Window {
                 height:width
                 color: "whitesmoke"
                 anchors.top: parent.top
-                anchors.topMargin: 3
-                anchors.left:parent.left
-                anchors.leftMargin: 3
-                radius: 10
                 border.color: "black"
                 MouseArea{
                     anchors.fill: parent
@@ -548,39 +431,22 @@ Window {
                 }
                 Shapes {
                     shapeName: cbShapeName.model[cbShapeName.currentIndex]
-                    anchors.centerIn: parent
+                    x: parent.x+3
+                    y: parent.y+20
                     scale: 8/cellSize
                     enabled: false
-                    visible:shapeModel.enabled
                 }
             }
 
             ComboBox {
-                id: cbShapeName
-                anchors.top: shapeModel.top
-                anchors.left: shapeModel.right
-                width: buttonSize*1.6
-                height: buttonSize*0.8
-                popup.height: 150
-                font.pixelSize: buttonSize*0.25
-                font.family: lemonadaFont.name
-                background: Rectangle {
-                    radius: 10
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#ff9966" }
-                        GradientStop { position: 1.0; color: "#ffcc99" }
+                    id: cbShapeName
+                    anchors.top: shapeModel.top
+                    anchors.left: shapeModel.right
+                    width: 65
+                    height: 40
+                    popup.height: 150
+                    model: ListModel {
                     }
-                }
-                popup.font.family: font.family
-                popup.font.pixelSize: font.pixelSize
-                popup.background: Rectangle {
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#ff9966" }
-                        GradientStop { position: 1.0; color: "#ffcc99" }
-                    }
-                }
-                model: ListModel {
-                }
             }
 
             Repeater {
@@ -588,8 +454,7 @@ Window {
                 model: shapeList
                 Shapes {
                     shapeName: (shapeName !==0 ) ? shapeName:cbShapeName.model[cbShapeName.currentIndex]
-                    x: (createArea.width/30)*shapeName
-                    y: createArea.height/4
+                    anchors.centerIn: parent
                 }
             }
             ListModel {
@@ -599,20 +464,12 @@ Window {
             Button {
                 id:btnEdit
                 text: "\u{2702}"
-                width: buttonSize
-                height: buttonSize
+                width: 40
+                height: 40
                 font.bold: true
-                font.pixelSize: buttonSize*0.6
+                font.pixelSize: 30
                 enabled: btnSolve.enabled
                 z: z++
-                background: Rectangle {
-                    radius: 12
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#3366cc" }
-                        GradientStop { position: 1.0; color: "#3B82F6" }
-                    }
-                }
-                hoverEnabled: false
                 Text {
                     id :txtEdit
                     x: parent.x +20
@@ -635,22 +492,20 @@ Window {
                     onExited: txtEdit.visible=false
                 }
                 anchors.right: parent.right
-                anchors.rightMargin: 3
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 3
             }
         }
     }
     function undoChanged(text)  {
         var qmlMap = []
-        //usedShapeItems = usedShapeItems.filter(value => value !== text);
+        usedShapeItems = usedShapeItems.filter(value => value !== text);
         for(var i=0;i<grid.rows;i++)
         {
             var tmp=[]
             for(var j=0;j<grid.columns;j++)
             {
                 var c = grid.children[i*grid.columns+j];
-                var val = c.labelText;
+                var val = parseInt(c.labelText);
                 if(val!==text)
                     tmp.push(val)
                 else
@@ -681,7 +536,7 @@ Window {
         btnSolve.enabled=isEnable
         for(var i=0; i<items.count;i++)
         {
-            if(!usedShapeItems.includes(items.itemAt(i).shapeName))
+            if(!usedShapeItems.includes(parseInt(items.itemAt(i).children[0].labelText)))
                 items.itemAt(i).visible=isEnable
         }
     }
@@ -697,7 +552,7 @@ Window {
             var tmp=[]
             for(var j=0;j<grid.columns;j++)
             {
-                tmp.push(grid.children[i*grid.columns+j].labelText)
+                tmp.push(parseInt(grid.children[i*grid.columns+j].labelText))
             }
             qmlMap.push(tmp)
         }
@@ -726,7 +581,6 @@ Window {
             var value= board.map[row][col]
             cell.color= colors.get(value)
             cell.labelText= value
-            cell.border.color= (value=== -1) ? "transparent":"black"
         }
     }
 }

@@ -66,7 +66,7 @@ Window {
         }
         Button {
             id: btnAddFirstRow
-            text: "\u{2B06}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
@@ -74,13 +74,6 @@ Window {
             anchors.left: gridEdit.left
             anchors.bottom: gridEdit.top
             anchors.bottomMargin: 10
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 let addVector = Array(10).fill(-1);
@@ -90,20 +83,13 @@ Window {
         }
         Button {
             id: btnDeleteFirstRow
-            text: "\u{2B07}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
             font.bold: true
             anchors.right: gridEdit.right
             anchors.bottom: btnAddFirstRow.bottom
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 var row= gridVec[0]
@@ -118,7 +104,7 @@ Window {
         }
         Button {
             id: btnAddLastRow
-            text: "\u{2B07}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
@@ -126,13 +112,6 @@ Window {
             anchors.left: gridEdit.left
             anchors.top: gridEdit.bottom
             anchors.topMargin: 10
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 let addVector = Array(10).fill(-1);
@@ -142,20 +121,13 @@ Window {
         }
         Button {
             id: btnDeleteLastRow
-            text: "\u{2B06}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
             font.bold: true
             anchors.right: gridEdit.right
             anchors.bottom: btnAddLastRow.bottom
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 var row= gridVec[gridVec.length-1]
@@ -171,7 +143,7 @@ Window {
 
         Button {
             id: btnAddFirstCol
-            text: "\u{2B05}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
@@ -179,13 +151,6 @@ Window {
             anchors.right: gridEdit.left
             anchors.top: gridEdit.top
             anchors.rightMargin: 10
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 for(var i=0;i<gridVec.length;i++ )
@@ -197,20 +162,13 @@ Window {
         }
         Button {
             id: btnDeleteFirstCol
-            text: "\u{27A1}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
             font.bold: true
             anchors.left: btnAddFirstCol.left
             anchors.bottom: gridEdit.bottom
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 for(var i=0;i<gridVec.length;i++)
@@ -224,7 +182,7 @@ Window {
         }
         Button {
             id: btnAddLastCol
-            text: "\u{27A1}"
+            text: (platform === "PC") ?"+":"\u{2795}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
@@ -232,13 +190,6 @@ Window {
             anchors.left: gridEdit.right
             anchors.top: gridEdit.top
             anchors.leftMargin: 10
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 for(var i=0;i<gridVec.length;i++ )
@@ -250,20 +201,13 @@ Window {
         }
         Button {
             id: btnDeleteLastCol
-            text: "\u{2B05}"
+            text: (platform === "PC") ?"-":"\u{2796}"
             width: cellSize
             height: cellSize
             font.pixelSize: 20
             font.bold: true
             anchors.left: btnAddLastCol.left
             anchors.bottom: gridEdit.bottom
-            background: Rectangle {
-                radius: 10
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9966" }
-                    GradientStop { position: 1.0; color: "#ffddcc" }
-                }
-            }
             onClicked: {
                 var gridVec=grid2Vector()
                 var sz= gridVec[0].length
@@ -283,7 +227,7 @@ Window {
         width: buttonSize*2
         height: buttonSize
         font.pixelSize: 20
-        font.family: jaroFont.name
+        font.bold: true
         anchors.leftMargin: 20
         anchors.bottomMargin: 20
         anchors.left: parent.left
@@ -292,14 +236,6 @@ Window {
             count=cellNum
             fillMaptoGrid()
         }
-        background: Rectangle {
-            radius: 25
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3366cc" }
-                GradientStop { position: 1.0; color: "#3B82F6" }
-            }
-        }
-        hoverEnabled: false
     }
 
     Label{
@@ -307,7 +243,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: btnRevert.top
         anchors.bottomMargin: 20
-        font.family: jaroFont.name
+        font.bold: true
         color: count===cellNum ? "darkgreen":"red"
         text: "Cells: "+count
         font.pixelSize: 16
@@ -332,14 +268,6 @@ Window {
             setChanged()
             close()
         }
-        background: Rectangle {
-            radius: 25
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#4CAF50" }
-                GradientStop { position: 1.0; color: "#8BC34A" }
-            }
-        }
-        hoverEnabled: false
     }
     Button {
         id: btnCancel
@@ -356,14 +284,6 @@ Window {
             fillMaptoGrid()
             close()
         }
-        background: Rectangle {
-            radius: 25
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#E53935" }
-                GradientStop { position: 1.0; color: "#EF5350" }
-            }
-        }
-        hoverEnabled: false
     }
     Dialog {
         id: warningChange

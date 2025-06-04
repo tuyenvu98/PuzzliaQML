@@ -1,34 +1,37 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-
+//import QtQuick.Pdf
 Window {
     visible: true
     width: 800
     height: 600
-    color: "lightblue"
+    title: "Word File Viewer"
 
+    /*PdfMultiPageView {
+        anchors.fill: parent
+        document: PdfDocument { source: "text/Guidelines.pdf" }
+    }*/
     ColumnLayout {
         anchors.fill: parent
         anchors.leftMargin: 15
         anchors.rightMargin: 15
         Text {
-            text: "To save what you have done, use File-> Save or File->Save As.
-To import a map from external source, use File-> Import.
-To change settings, use Options->Setting.
-To see Log, use Options->Log.
-How to play?
-- Right click normal cell to rotate the shape counterclockwise.
-- Left click normal cell to rotate the shape clockwise.
-- Left click special cell to reverse the shape.
-To move the shape press the special cell and move wherever you want.
-When you added the shape to the board, double click to the shape to undo it."
+            text: "To save what you have done, use File-> Save or File->Save As.\n
+To import a map from external source, use File-> Import.\n
+To change settings, use Options->Setting.\n
+To see Log, use Options->Log.\n
+How to play?\n
+- Right click normal cell to rotate the shape counterclockwise.\n
+- Left click normal cell to rotate the shape clockwise.\n
+- Left click special cell to reverse the shape.\n
+To move the shape press the special cell and move wherever you want.\n
+When you added the shape to the board, double click to the shape to undo it.\n"
             color: "darkred"
             anchors.topMargin: 15
             anchors.top: parent.top
             anchors.bottomMargin: 15
             font.pixelSize: 14
-            font.family: lemonadaFont.name
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WrapAnywhere
@@ -49,13 +52,5 @@ When you added the shape to the board, double click to the shape to undo it."
         onClicked: {
             close()
         }
-        background: Rectangle {
-            radius: 25
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#4CAF50" }
-                GradientStop { position: 1.0; color: "#8BC34A" }
-            }
-        }
-        hoverEnabled: false
     }
 }

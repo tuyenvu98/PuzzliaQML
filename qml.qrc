@@ -8,9 +8,6 @@
         <file>Log.qml</file>
         <file>Win.qml</file>
         <file>Help.qml</file>
-        <file>fonts/Jaro-Regular.ttf</file>
-        <file>fonts/Lemonada.ttf</file>
-        <file>fonts/ProtestGuerrilla.ttf</file>
     </qresource>
     <qresource prefix="/text">
         <file>maps/01.txt</file>
@@ -32,10 +29,7 @@
         <file>Guidelines.pdf</file>
     </qresource>
     <qresource prefix="/image">
+        <file>gifs/firework.gif</file>
         <file>icons/windowIcon.ico</file>
-        <file>gifs/win1.gif</file>
-        <file>gifs/win2.gif</file>
-        <file>gifs/win3.gif</file>
-        <file>gifs/win0.gif</file>
     </qresource>
 </RCC>
