@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include <QSet>
+#include <QMutex>
 #include "imageprocessor.h"
 
 class Board : public QObject
@@ -16,7 +17,8 @@ public:
     void setActiveShapes(QSet<int> usedShapes);
     bool canPlaceShape( int shapeIndex,int rotation, int x, int y);
     void placeShape(int shapeIndex,int rotation, int row, int col);
-    void fillMapRecursive();
+    void fillMapConcurrent();
+    void fillMapRecursiveThreadSafe();
     void setMap(QVector<QVector<int>>);
     void Reset();
     void init();
@@ -37,6 +39,7 @@ public slots:
     QStringList getMapList();
     void cancel();
 private:
+    static QMutex resultMutex;
     QVector<QVector<int>> map;
     QVector<QVector<int>> startMap;
     QVector<QVector<QVector<int>>> result;

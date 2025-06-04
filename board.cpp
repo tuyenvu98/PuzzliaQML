@@ -5,6 +5,8 @@
 #include <QTime>
 #include <QtConcurrent>
 
+QMutex Board::resultMutex;
+
 Board::Board(QObject *parent)
     : QObject{parent}
 {
@@ -261,7 +263,8 @@ void Board::setActiveShapes(QSet<int> usedShapes)
 
 void Board::saveMap()
 {
-    QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    //QString writablePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString writablePath="/home/images/";
     QDir().mkpath(writablePath);
     QString inputFile =writablePath+"/#Saved.txt";
     QFile input(inputFile);
@@ -280,7 +283,7 @@ void Board::saveMap()
         out << tmp <<"\n";
     }
     input.close();
-    emit mapChanged("Wrote map into file. \n");
+    emit mapChanged("Wrote map into file. \n"+ writablePath);
 }
 
 void Board::importMap(const QString& sourcePath)
@@ -350,74 +353,53 @@ bool hasZeroElement(const QVector<QVector<int>>& map) {
 }
 
 
-// Recursive backtracking function to fill the map
-void Board::fillMapRecursive() {
+void Board::fillMapRecursiveThreadSafe() {
+    if (cancelled) return;
 
-    if(cancelled)
-        return;
-    if(!hasZeroElement(map))
-    {
+    if (!hasZeroElement(map)) {
+        QMutexLocker locker(&resultMutex);
         result.push_back(map);
         qDebug() << "Found a solution !!!";
-        emit mapChanged("Found a solution !!!\n");
-        run=false;
-        while(!run)
-        {}
         return;
     }
+
     int cols = map[0].size();
     int rows = map.size();
+
     for (int col = 0; col < cols; ++col) {
         for (int row = 0; row < rows; ++row) {
-            int count =0;
-            for (int currow = row; currow < rows; currow++) {
-                if(map[currow][col]==0)
-                    count ++;
+            int count = 0;
+            for (int currow = row; currow < rows; ++currow) {
+                if (map[currow][col] == 0) count++;
             }
-            for (int m = col+1; m < cols; m++)
-            {
-                for (int n = 0; n < rows; n++)
-                {
-                    if(map[n][m]==0)
-                        count ++;
+            for (int m = col + 1; m < cols; m++) {
+                for (int n = 0; n < rows; n++) {
+                    if (map[n][m] == 0) count++;
                 }
             }
-            int sum=0;
-            for(int index=0; index <activeShapes.size(); index ++)
-            {
-                if(unavailableIndex.contains(index))
-                    continue;
-                int key = activeShapes.keys()[index];
-                if(key==1)
-                    sum+=3;
-                else if(key==11||key==12||key==2)
-                    sum+=4;
-                else sum+=5;
-            }
-            if(sum!=count)
-            {
-                if(unavailableIndex.size()==0)
-                {
-                    QString msg = "Done! No more solutions found.\n";
-                    qDebug() << msg;
-                    emit mapChanged(msg);
-                }
-                return;
-            }
-            for(int index=0; index <activeShapes.size(); index ++)
-            {
-                if(unavailableIndex.contains(index))
-                    continue;
 
-                foreach (int rotation, rotationTypes[activeShapes.keys()[index]]) {
-                    if (canPlaceShape(index,rotation, row, col)) {
+            int sum = 0;
+            for (int index = 0; index < activeShapes.size(); index++) {
+                if (unavailableIndex.contains(index)) continue;
+                int key = activeShapes.keys()[index];
+                sum += (key == 1) ? 3 : (key == 11 || key == 12 || key == 2) ? 4 : 5;
+            }
+
+            if (sum != count) return;
+
+            for (int index = 0; index < activeShapes.size(); index++) {
+                if (unavailableIndex.contains(index)) continue;
+
+                for (int rotation : rotationTypes[activeShapes.keys()[index]]) {
+                    if (canPlaceShape(index, rotation, row, col)) {
                         auto tmpMap = map;
-                        placeShape( index,rotation, row, col);
+                        QSet<int> tmpUnavailable = unavailableIndex;
+
+                        placeShape(index, rotation, row, col);
                         unavailableIndex.insert(index);
-                        fillMapRecursive();
-                        // Backtrack if placing the current shape is not successful
-                        unavailableIndex.remove(index);
-                        map =tmpMap;
+                        fillMapRecursiveThreadSafe();
+                        unavailableIndex = tmpUnavailable;
+                        map = tmpMap;
                     }
                 }
             }
@@ -425,10 +407,62 @@ void Board::fillMapRecursive() {
     }
 }
 
+// Recursive backtracking function to fill the map
+void Board::fillMapConcurrent() {
+    if (cancelled) return;
+
+    int cols = map[0].size();
+    int rows = map.size();
+    bool started = false;
+
+    for (int col = 0; col < cols && !started; ++col) {
+        for (int row = 0; row < rows && !started; ++row) {
+            if (map[row][col] != 0) continue;
+
+            QList<QFuture<void>> futures;
+
+            for (int index = 0; index < activeShapes.size(); index++) {
+                if (unavailableIndex.contains(index)) continue;
+
+                int key = activeShapes.keys()[index];
+                const QVector<int>& rotations = rotationTypes[key];
+
+                for (int rotation : rotations) {
+                    if (!canPlaceShape(index, rotation, row, col)) continue;
+
+                    auto* boardCopy = new Board();
+
+                    boardCopy->map = map;
+                    boardCopy->activeShapes = activeShapes;
+                    boardCopy->rotationTypes = rotationTypes;
+                    boardCopy->unavailableIndex = unavailableIndex;
+                    boardCopy->cancelled = cancelled;
+
+                    boardCopy->placeShape(index, rotation, row, col);
+                    boardCopy->unavailableIndex.insert(index);
+
+                    auto future = QtConcurrent::run([=]() {
+                        boardCopy->fillMapRecursiveThreadSafe();
+                        delete boardCopy;
+                    });
+
+                    futures.append(future);
+                }
+            }
+
+            for (auto& f : futures) {
+                f.waitForFinished();
+            }
+
+            started = true;
+        }
+    }
+}
+
 void Board::solve() {
     cancelled=false;
     startMap=map;
-    QtConcurrent::run(std::bind(&Board::fillMapRecursive,this));
+    QtConcurrent::run(std::bind(&Board::fillMapConcurrent,this));
 }
 
 QVector<QVector<int>> Board::getMap() const
@@ -466,25 +500,20 @@ void Board::cancel()
 
 void Board::setMapQML(QVector<QVector<int>> value)
 {
-    /*int rows=map.size();
-    int cols=map[0].size();*/
-    QVector<int> lastVal = value[value.size()-1];
     int rows=value.size();
-    int cols=lastVal.size()/value.size();
-    QVector<QVector<int>> qmlMap;
+    int cols=value[0].size();
     QSet<int> usedShapes;
-    for(int i=0;i<rows*cols;i+=cols )
+    for(int i=0;i<rows;i++ )
     {
-        QVector<int>tmp= lastVal.mid(i,cols);
+        QVector<int>tmp= value[i];
         for(int j=0;j<cols;j++)
             if(tmp[j]!=0)
                 usedShapes.insert(tmp[j]);
-        qmlMap.push_back(tmp);
     }
     setActiveShapes(usedShapes);
-    if (map != qmlMap)
+    if (map != value)
     {
-        map=qmlMap;
+        map=value;
         QString msg="Set map \n";
         if(!hasZeroElement(map))
             msg="YOU WIN";

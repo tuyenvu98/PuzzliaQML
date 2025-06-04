@@ -7,15 +7,16 @@ Window {
     width: 300
     height: 600
     title: "Log"
+    color: "lightblue"
     Text {
         id: labelStatus
         text: "Status:"
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.leftMargin: 20
+        anchors.leftMargin: 15
         anchors.topMargin: 10
-        font.pixelSize: 18
-        font.bold: true
+        font.pixelSize: 25
+        font.family: jaroFont.name
         font.underline: true
     }
     Button {
@@ -23,7 +24,7 @@ Window {
         text: (platform === "PC") ?"Clear":"\u{1F5D1}"
         width: buttonSize*2
         height: buttonSize
-        font.bold: true
+        font.family: jaroFont.name
         font.pixelSize: 20
         Text {
             id :txtClear
@@ -44,16 +45,25 @@ Window {
         anchors.bottom: parent.bottom
         anchors.leftMargin: 10
         anchors.bottomMargin: 10
+        background: Rectangle {
+            radius: 25
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#E53935" }
+                GradientStop { position: 1.0; color: "#EF5350" }
+            }
+        }
+        hoverEnabled: false
     }
     ScrollView {
         anchors.top:labelStatus.bottom
         anchors.bottom:btnClear.top
         anchors.bottomMargin: 10
-        anchors.leftMargin: 10
+        anchors.leftMargin: 20
         anchors.rightMargin: 10
         width: parent.width
         TextArea {
             id: statusArea
+            font.family: lemonadaFont.name
             width: parent.width
             height: contentHeight
             text: status
@@ -77,5 +87,13 @@ Window {
         onClicked: {
             logWindow.destroy()
         }
+        background: Rectangle {
+            radius: 25
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#4CAF50" }
+                GradientStop { position: 1.0; color: "#8BC34A" }
+            }
+        }
+        hoverEnabled: false
     }
 }

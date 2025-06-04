@@ -1,0 +1,22 @@
+# Ignore build folders
+build/
+build*/
+
+# Ignore Qt Creator user-specific files
+*.user
+*.user.*
+*.autosave
+
+# Ignore generated Makefiles and object files
+Makefile*
+*.o
+*.obj
+*.moc
+*.qmlc
+*.qrc.depends
+*.qrc.cpp
+
+# Ignore CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake

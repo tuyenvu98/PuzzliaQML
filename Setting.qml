@@ -18,9 +18,9 @@ Window {
             anchors.top: parent.top
             anchors.leftMargin: 20
             anchors.topMargin: 50
-            font.bold:true
-            text: " \u{1F4BB} Auto Solve            \u{27A1} "
-            font.pixelSize: 20
+            font.family: jaroFont.name
+            text: " \u{26A1} Auto Solve            \u{27A1} "
+            font.pixelSize: 25
             enabled: btnSolve.enabled
         }
         CheckBox {
@@ -38,9 +38,9 @@ Window {
             anchors.top: lblSolveMode.bottom
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            font.bold:true
-            text: " \u{1F4D0} Triangle Mode     \u{27A1} "
-            font.pixelSize: 20
+            font.family: jaroFont.name
+            text: " \u{25C0} Triangle Mode     \u{27A1} "
+            font.pixelSize: 25
         }
         CheckBox {
             id:cbMode
@@ -56,11 +56,12 @@ Window {
             anchors.left: lblMode.left
             anchors.top: lblMode.bottom
             anchors.topMargin: 20
-            font.bold:true
-            text: " \u{1F532} Cell Size                 \u{27A1} "
-            font.pixelSize: 20
+            font.family: jaroFont.name
+            text: " \u{25FC} Cell Size                 \u{27A1} "
+            font.pixelSize: 25
         }
-        Rectangle{
+        Rectangle
+        {
             width: 35
             height: 25
             border.color: "black"
@@ -68,11 +69,13 @@ Window {
             anchors.left: cbMode.left
             TextInput {
                 id:txtSize
+                font.family: jaroFont.name
                 width:parent.width
                 height:parent.height
                 inputMethodHints: Qt.ImhDigitsOnly
                 font.bold: true
                 font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
                 validator: IntValidator {
                     bottom: 0
                     top: 99
@@ -91,6 +94,14 @@ Window {
             anchors.rightMargin: 10
             anchors.right: btnCancel.left
             anchors.bottom: btnCancel.bottom
+            background: Rectangle {
+                radius: 25
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#4CAF50" }
+                    GradientStop { position: 1.0; color: "#8BC34A" }
+                }
+            }
+            hoverEnabled: false
             onClicked: {
                 if(cbMode.checked!=triangleMode)
                 {
@@ -120,6 +131,14 @@ Window {
             onClicked: {
                settingWindow.destroy()
             }
+            background: Rectangle {
+                radius: 25
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#E53935" }
+                    GradientStop { position: 1.0; color: "#EF5350" }
+                }
+            }
+            hoverEnabled: false
         }
 
         Text {
@@ -127,9 +146,10 @@ Window {
             color: "darkred"
             anchors.bottom: btnOK.top
             anchors.bottomMargin: 20
-            font.pixelSize: 14
+            font.pixelSize: 16
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
+            font.family: jaroFont.name
         }
         Dialog {
             id: warningChange
